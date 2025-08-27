@@ -1,4 +1,10 @@
-import { createContext, useState, useEffect, type ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  type ReactNode,
+  useContext,
+} from "react";
 import type { Product } from "../types";
 
 type ProductContextType = {
@@ -7,9 +13,7 @@ type ProductContextType = {
   error: string | null;
 };
 
-export const ProductContext = createContext<ProductContextType | undefined>(
-  undefined
-);
+const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 type ProductProviderProps = {
   children: ReactNode;
@@ -40,9 +44,20 @@ export function ProductProvider({ children }: ProductProviderProps) {
 
     fetchProducts();
   }, []);
+
   return (
     <ProductContext.Provider value={{ products, loading, error }}>
       {children}
     </ProductContext.Provider>
   );
 }
+
+export const useProductContext = (): ProductContextType => {
+  const context = useContext(ProductContext);
+
+  if (!context) {
+    throw new Error("useProductContext must be used within a ProductProvider");
+  }
+
+  return context;
+};
