@@ -1,13 +1,20 @@
 import ProductCard from "./ProductCard";
-import type { Product } from "../types";
+import { useContext } from "react";
+import { ProductContext } from "../context/ProductContext";
 
-type ProductListProps = {
-  products: Product[];
-};
+const ProductList = () => {
+  const context = useContext(ProductContext);
 
-const ProductList = ({ products }: ProductListProps) => {
+  if (!context) {
+    throw new Error("ProductContext must be used within a ProductProvider");
+  }
+
+  const { products, loading, error } = context;
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-s gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {loading && <p>Loading...</p>}
+      {error && <div className="error">{error}</div>}
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
