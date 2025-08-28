@@ -2,8 +2,10 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import type { Product, CartItem } from "../types";
 
 type CartContextType = {
-  addToCart: (product: Product) => void;
   cart: CartItem[];
+  addToCart: (product: Product) => void;
+  removeFromCart: (id: string) => void;
+  clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,8 +31,16 @@ export function CartProvider({ children }: CartProviderProps) {
     });
   };
 
+  const removeFromCart = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const clearCart = () => setCart([]);
+
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, removeFromCart, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
