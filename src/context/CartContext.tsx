@@ -3,6 +3,7 @@ import type { Product, CartItem } from "../types";
 
 type CartContextType = {
   addToCart: (product: Product) => void;
+  cart: CartItem[];
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,7 +30,7 @@ export function CartProvider({ children }: CartProviderProps) {
   };
 
   return (
-    <CartContext.Provider value={{ addToCart }}>
+    <CartContext.Provider value={{ cart, addToCart }}>
       {children}
     </CartContext.Provider>
   );
